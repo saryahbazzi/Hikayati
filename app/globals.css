@@ -137,3 +137,42 @@ body::before {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-champagne), transparent);
 }
+
+/* ───────── Typographic & layout primitives ───────── */
+@layer components {
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-olive);
+  }
+  [dir="rtl"] .eyebrow { letter-spacing: 0; text-transform: none; font-size: 1rem; }
+
+  .display-1 { font-family: var(--font-display); font-weight: 300; line-height: 1.04; font-size: clamp(2.8rem, 7vw, 6rem); letter-spacing: -0.01em; }
+  .display-2 { font-family: var(--font-display); font-weight: 300; line-height: 1.1; font-size: clamp(2.2rem, 5vw, 4.25rem); }
+  .display-3 { font-family: var(--font-display); font-weight: 400; line-height: 1.2; font-size: clamp(1.6rem, 3vw, 2.25rem); }
+  [dir="rtl"] .display-1, [dir="rtl"] .display-2, [dir="rtl"] .display-3 { font-weight: 400; line-height: 1.35; letter-spacing: 0; }
+
+  .lead { font-size: 1.125rem; line-height: 2; color: var(--color-ink-soft); }
+  @media (min-width: 768px) { .lead { font-size: 1.2rem; } }
+
+  .wrap { margin-inline: auto; width: 100%; max-width: 76rem; padding-inline: 1.5rem; }
+  @media (min-width: 1024px) { .wrap { padding-inline: 2.5rem; } }
+  .wrap-narrow { margin-inline: auto; width: 100%; max-width: 46rem; padding-inline: 1.5rem; }
+
+  .section { padding-block: clamp(5rem, 11vw, 9.5rem); }
+
+  /* Quiet text link with a champagne underline that draws in */
+  .link-quiet { position: relative; display: inline-block; color: var(--color-ink); }
+  .link-quiet::after { content: ""; position: absolute; inset-inline: 0; bottom: -0.2em; height: 1px; background: var(--color-champagne); transform-origin: left; transition: transform 0.5s ease; }
+  [dir="rtl"] .link-quiet::after { transform-origin: right; }
+  .link-quiet:hover::after { transform: scaleX(0.35); }
+
+  .focus-ring:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--color-olive); outline-offset: 3px; border-radius: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Soft tonal bands: sections blend into each other instead of stacking as slides */
+.band { background: linear-gradient(to bottom, transparent, rgb(236 229 214 / 0.55) 18%, rgb(236 229 214 / 0.55) 82%, transparent); }

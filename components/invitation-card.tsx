@@ -1,4 +1,4 @@
-import { sampleWedding as w } from "@/lib/content";
+import { sampleWedding as w } from "@/lib/sample";
 import { Lozenge, Sprig } from "./floral";
 
 /**
