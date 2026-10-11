@@ -9,7 +9,7 @@ const PORT = Number(process.env.E2E_PORT ?? 3400);
 export default defineConfig({
   testDir: "./e2e",
   timeout: 180_000,
-  expect: { timeout: 15_000 },
+  expect: { timeout: process.env.E2E_REUSE ? 60_000 : 15_000 },
   workers: 1,
   fullyParallel: false,
   reporter: [["list"]],
@@ -22,7 +22,7 @@ export default defineConfig({
   webServer: {
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/en`,
-    reuseExistingServer: false,
+    reuseExistingServer: !!process.env.E2E_REUSE,
     timeout: 120_000,
     env: {
       HIKAYATI_DEMO_ACCESS: "true",

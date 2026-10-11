@@ -20,7 +20,7 @@ interface Props { packages: PackageView[]; addons: SimAddon[]; discounts: Discou
 export function PackagesAdmin({ packages, addons, discounts, taxRate, locale, t }: Props) {
   const p = t.packages;
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <Notice tone="demo"><strong className="font-medium">{p.stateTitle}.</strong> {p.state}</Notice>
       <Panel title={p.sim.title} id="simulator">
         <PriceSimulator packages={packages} addons={addons} discounts={discounts} taxRate={taxRate} locale={locale} t={t} />

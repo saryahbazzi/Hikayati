@@ -25,8 +25,8 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   return (
     <>
       <PageHeading title={a.title} sub={a.sub} />
-      <div className="grid gap-16 lg:grid-cols-[26rem_1fr]">
-        <section aria-labelledby="profile-h">
+      <div className="grid grid-cols-1 gap-16 lg:grid-cols-[26rem_1fr]">
+        <section aria-labelledby="profile-h" className="min-w-0">
           <h2 id="profile-h" className="font-display mb-6 text-2xl">{a.profile}</h2>
           <AccountForm locale={locale} initial={profile} />
           <div className="mt-12 border-t border-line pt-8">
@@ -39,7 +39,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
           </div>
         </section>
 
-        <section aria-labelledby="privacy-h" className="max-w-2xl">
+        <section aria-labelledby="privacy-h" className="min-w-0 max-w-2xl">
           <h2 id="privacy-h" className="font-display text-2xl">{a.privacy}</h2>
           <p className="mt-2 text-ink-soft">{a.privacyIntro}</p>
           <dl className="mt-8 divide-y divide-line border-y border-line">
@@ -52,7 +52,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
           </dl>
           <p className="mt-6 text-sm text-ink-soft">{a.pLaw}</p>
           <div className="mt-6 flex flex-wrap gap-6">
-            <Button href={`/${locale}#contact`} variant="quiet" size="sm">{a.pContact}</Button>
+            <Button href={`/${locale}#contact`} variant="quiet" size="sm" className="!whitespace-normal text-start leading-6">{a.pContact}</Button>
           </div>
         </section>
       </div>

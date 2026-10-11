@@ -6,6 +6,9 @@ import { pages } from "@/lib/i18n/pages";
 import { guestCopy } from "@/lib/i18n/guest";
 import { guestsCopy } from "@/lib/i18n/guests";
 import { authCopy } from "@/lib/i18n/auth";
+import { wizardCopy } from "@/lib/i18n/wizard";
+import { portalCopy } from "@/lib/i18n/portal";
+import { adminCopy } from "@/lib/i18n/admin";
 
 const ARABIC = /[؀-ۿ]/;
 const walk = (v: unknown, path = "", out: [string, string][] = []): [string, string][] => {
@@ -14,7 +17,7 @@ const walk = (v: unknown, path = "", out: [string, string][] = []): [string, str
   else if (v && typeof v === "object") Object.entries(v).forEach(([k, x]) => walk(x, `${path}.${k}`, out));
   return out;
 };
-const bundles = { common, home, pages, guestCopy, guestsCopy, authCopy };
+const bundles = { common, home, pages, guestCopy, guestsCopy, authCopy, wizardCopy, portalCopy, adminCopy };
 
 describe("i18n", () => {
   it("resolves pairs, lists and nested objects", () => {
@@ -26,7 +29,7 @@ describe("i18n", () => {
     const en = walk(t("en")), ar = walk(t("ar"));
     expect(ar.length).toBe(en.length);
     for (const [path, s] of [...en, ...ar]) expect(s.trim(), path).not.toBe("");
-    const latinOnlyAllowed = /brand|phoneValue|instagramValue|\.n$|\.n\]|^\.brand/;
+    const latinOnlyAllowed = /exEn|driver|brand|phoneValue|instagramValue|\.n$|\.n\]|^\.brand/;
     const untranslated = ar.filter(([path, s], i) => !ARABIC.test(s) && s === en[i][1] && !latinOnlyAllowed.test(path));
     expect(untranslated.map(([k]) => k)).toEqual([]);
   });

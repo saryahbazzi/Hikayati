@@ -45,7 +45,7 @@ export default async function AdminEventDetail({ params }: { params: Promise<{ l
         <Kpi label={t.events.package} value={<span className="text-2xl">{d.event.packageName ? d.event.packageName[locale] : "—"}</span>} />
       </section>
 
-      <div className="grid gap-6">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
         <Panel title={t.events.guestsTitle} id="guests" note={t.events.guestsNote}
           actions={access.exportData ? <a className={btnQuiet} href={`/api/events/${ev.id}/guests.csv`}>{t.events.exportCsv}</a> : undefined}>
           <GuestManager eventId={ev.id} locale={locale} t={guestsCopy(locale)} canEdit={access.guests} canExport={access.exportData} />

@@ -12,9 +12,25 @@ const nextConfig: NextConfig = {
     return [{ source: "/", destination: "/en", permanent: false }];
   },
   async headers() {
+    // Content-Security-Policy (production only: Next's dev server needs eval for HMR). Inline scripts/styles are
+    // required by Next's runtime; everything else is same-origin. https: images allow registered template assets.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "media-src 'self' blob: https:",
+      "font-src 'self' data:",
+      "connect-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+    ].join("; ");
     return [{
       source: "/:path*",
       headers: [
+        ...(process.env.NODE_ENV === "production" ? [{ key: "Content-Security-Policy", value: csp }] : []),
         { key: "X-Content-Type-Options", value: "nosniff" },
         { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         { key: "X-Frame-Options", value: "SAMEORIGIN" },

@@ -190,7 +190,7 @@ export const adminCopy = makeT({
     funnel: p("RSVP funnel", "مسار الردود"), f_guests: p("Guests added", "ضيوف مضافون"), f_sent: p("Invitations sent", "دعوات مرسلة"), f_opened: p("Opened", "فُتحت"), f_responded: p("Replied", "تم الرد"),
     f_accepted: p("Accepted", "قبلوا"), f_declined: p("Declined", "اعتذروا"), f_checkedIn: p("Checked in", "تم دخولهم"),
     attendance: p("Attendance rate per event", "نسبة الحضور لكل مناسبة"), accepted: p("Accepted", "قبلوا"), arrived: p("Arrived", "حضروا"), rate: p("Rate", "النسبة"),
-    messages: p("Message volume", "حجم الرسائل"), byKind: p("By type", "حسب النوع"), byStatus: p("By status", "حسب الحالة"), messagesNote: p("All messages are simulated by the demo provider.", "كل الرسائل محاكاة عبر المزوّد التجريبي."),
+    messages: p("Message volume", "حجم الرسائل"), byKind: p("By type", "حسب النوع"), msgByStatus: p("By status", "حسب الحالة"), messagesNote: p("All messages are simulated by the demo provider.", "كل الرسائل محاكاة عبر المزوّد التجريبي."),
     orders: p("Demo orders", "الطلبات التجريبية"), ordersCount: p("Demo orders", "عدد الطلبات التجريبية"), ordersTotal: p("Demo revenue (not real money)", "الإيراد التجريبي (ليس مبلغًا حقيقيًا)"),
     ordersNote: p("DEMO: no payment is taken on the platform yet, so this figure is not revenue.", "تجريبي: لا يوجد تحصيل مدفوعات على المنصة بعد، لذا هذا الرقم ليس إيرادًا."),
     empty: p("No data yet.", "لا توجد بيانات بعد."), count: p("Count", "العدد"),

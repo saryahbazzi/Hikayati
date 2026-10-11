@@ -34,7 +34,7 @@ export default async function AdminOverview({ params }: { params: Promise<{ loca
             <Kpi label={t.overview.awaiting} value={fmtNum(o.totals.awaiting)} />
             <Kpi label={t.overview.checkedIn} value={fmtNum(o.totals.checkedIn)} sub={`${pct(o.totals.checkedIn, o.totals.accepted)}% / ${t.overview.accepted}`} />
           </div>
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <Panel title={t.overview.upcoming} id="upcoming">
               {o.upcoming.length === 0 ? <Empty>{t.overview.noUpcoming}</Empty> : (
                 <TableWrap label={t.overview.upcoming}>

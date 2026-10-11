@@ -38,7 +38,7 @@ function Preview({ kind, url, overlay, layout, palette, fontPair, t }: { kind: s
     <div className="mx-auto w-full max-w-[18rem]">
       {kind === "builtin" ? <InvitationRenderer content={sample} layout={layout} palette={palette} fontPair={fontPair} />
         : renderable && urlOk(url) && overlay ? <InvitationRenderer content={sample} layout="image-overlay" palette="ivory" fontPair="classic" asset={{ kind, url, overlayFields: overlay }} />
-        : <div className="flex aspect-[3/4.25] items-center justify-center border border-dashed border-ink/25 p-4 text-center text-xs text-ink-soft">{renderable ? t.overlayInvalid : t.noPreview}</div>}
+        : <div className="flex aspect-[3/4.25] items-center justify-center border border-dashed border-ink/25 p-4 text-center text-xs text-ink-soft">{renderable && urlOk(url) && !overlay ? t.overlayInvalid : t.noPreview}</div>}
       <p className="mt-2 text-center text-xs text-taupe">{t.previewNote}</p>
     </div>
   );
@@ -61,7 +61,7 @@ export function TemplatesAdmin({ templates, locale, t }: { templates: TemplateVi
   const editing = templates.find((x) => x.id === editId) ?? null;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <Notice tone="info"><strong className="font-medium">{tt.importantTitle}.</strong> {tt.important}</Notice>
       <ErrorNotice text={errorText(t.common, st.error, st.fields, { notSupported: tt.cantPublish })} />
       <OkNotice text={ok} />
@@ -118,7 +118,7 @@ function EditPanel({ tpl, t, locale, onDone, onClose }: { tpl: TemplateView; t: 
     <section aria-label={tt.editTitle} className="border border-line bg-paper/70">
       <div className="flex items-center justify-between border-b border-line px-5 py-3"><h2 className="text-sm font-medium">{tt.editTitle}: {tpl.name[locale]}</h2><button type="button" className={btnQuiet} onClick={onClose}>{tt.close}</button></div>
       <div className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="grid gap-6">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
           <form onSubmit={saveMeta} className="grid gap-3 sm:grid-cols-2">
             <Lbl label={tt.nameEn}><input className={ctl} value={f.en} onChange={set("en")} required maxLength={80} dir="ltr" /></Lbl>
             <Lbl label={tt.nameAr}><input className={ctl} value={f.ar} onChange={set("ar")} required maxLength={80} dir="rtl" /></Lbl>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { PortalNav } from "@/components/portal/portal-nav";
 import { LanguageToggle } from "@/components/site/language-toggle";
@@ -14,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function PortalLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const actor = await requireActor(locale);
+  const actor = await requireActor(locale, (await headers()).get("x-hk-path") ?? undefined);
   const t = common(locale);
   const base = `/${locale}`;
   const items = [

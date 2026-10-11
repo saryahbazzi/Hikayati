@@ -62,7 +62,7 @@ export function PriceSimulator({ packages, addons, discounts, taxRate, locale, t
             <div className="flex justify-between gap-4 border-t border-line pt-2"><dt className="text-ink-soft">{s.subtotal}</dt><dd className="tabular-nums" dir="ltr">{money(q.subtotalMinor)}</dd></div>
             {q.discountMinor > 0 && <div className="flex justify-between gap-4"><dt className="text-ink-soft">{s.discountLine} ({d?.percent}%)</dt><dd className="tabular-nums" dir="ltr">−{money(q.discountMinor)}</dd></div>}
             <div className="flex justify-between gap-4"><dt className="text-ink-soft">{s.taxLine} ({Math.round(q.taxRate * 1000) / 10}%)</dt><dd className="tabular-nums" dir="ltr">{money(q.taxMinor)}</dd></div>
-            <div className="flex justify-between gap-4 border-t border-ink/30 pt-2 text-base"><dt className="font-medium">{s.total}</dt><dd className="font-display text-2xl tabular-nums" dir="ltr">{money(q.totalMinor)}</dd></div>
+            <div className="flex justify-between gap-4 border-t border-ink/30 pt-2 text-base"><dt className="font-medium">{s.total}</dt><dd className="font-sans text-2xl tabular-nums" dir="ltr">{money(q.totalMinor)}</dd></div>
           </dl>
         ) : null}
         {subs.length > 0 && <p className="mt-3 text-xs leading-5 text-ink-soft">{s.subscriptionNote} {subs.map((p) => `${money(p.amountMinor)} / ${p.billingInterval === "year" ? t.packages.year : t.packages.month}`).join(", ")}</p>}

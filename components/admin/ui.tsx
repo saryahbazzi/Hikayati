@@ -19,7 +19,7 @@ export function AdminHeading({ title, sub, actions, back }: { title: ReactNode; 
 export function Panel({ title, children, actions, className = "", id, note }: { title?: ReactNode; children: ReactNode; actions?: ReactNode; className?: string; id?: string; note?: ReactNode }) {
   const hid = id ? `${id}-h` : undefined;
   return (
-    <section id={id} aria-labelledby={title ? hid : undefined} className={`border border-line bg-paper/70 ${className}`}>
+    <section id={id} aria-labelledby={title ? hid : undefined} className={`min-w-0 border border-line bg-paper/70 ${className}`}>
       {(title || actions) && (
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
           {title && <h2 id={hid} className="text-sm font-medium text-ink">{title}</h2>}
@@ -36,7 +36,7 @@ export function Kpi({ label, value, sub }: { label: string; value: ReactNode; su
   return (
     <div className="border border-line bg-paper/70 px-4 py-3">
       <p className="text-xs text-ink-soft">{label}</p>
-      <p className="font-display mt-0.5 text-3xl font-light leading-tight text-ink" dir="ltr" style={{ textAlign: "start" }}>{value}</p>
+      <p className="mt-0.5 font-sans text-3xl font-light leading-tight tabular-nums text-ink" dir="ltr" style={{ textAlign: "start" }}>{value}</p>
       {sub && <p className="mt-0.5 text-xs text-taupe">{sub}</p>}
     </div>
   );
@@ -44,7 +44,7 @@ export function Kpi({ label, value, sub }: { label: string; value: ReactNode; su
 
 export const tableCls = "w-full min-w-[40rem] border-collapse text-start text-sm";
 export function TableWrap({ children, label }: { children: ReactNode; label: string }) {
-  return <div className="overflow-x-auto border border-line bg-paper/70" role="region" aria-label={label} tabIndex={0}>{children}</div>;
+  return <div className="relative overflow-x-auto border border-line bg-paper/70" role="region" aria-label={label} tabIndex={0}>{children}</div>;
 }
 export function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
   return <th scope="col" className={`whitespace-nowrap border-b border-line bg-bone/50 px-4 py-2.5 text-start text-xs font-medium text-ink-soft ${className}`}>{children}</th>;

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { AccountToggle } from "@/components/admin/account-toggle";
-import { AdminHeading, Empty, FilterBar, Lbl, Pager, Td, TableWrap, Th, ctl, first, qs, tableCls } from "@/components/admin/ui";
+import { AdminHeading, Empty, FilterBar, Lbl, Pager, Td, TableWrap, Th, ctl, first, qs } from "@/components/admin/ui";
 import { Badge, DemoTag } from "@/components/ui/misc";
 import { fmtDateTime } from "@/components/admin/format";
 import { isLocale } from "@/lib/i18n";

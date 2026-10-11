@@ -28,14 +28,14 @@ export function Footer({ locale, t }: { locale: Locale; t: C }) {
         </dl>
       </div>
       <p className="wrap mt-10 text-xs text-taupe">{f.placeholderNote}</p>
-      <div className="wrap mt-8 flex flex-col gap-6 border-t border-line pt-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
+      <div className="wrap mt-8"><div className="flex flex-col gap-6 border-t border-line pt-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
         <ul className="flex flex-wrap gap-x-8 gap-y-3">
           <li><Link href={`${base}/privacy`} className="hover:text-ink">{f.privacy}</Link></li>
           <li><Link href={`${base}/terms`} className="hover:text-ink">{f.terms}</Link></li>
           <li><Link href={`${base}/contact`} className="hover:text-ink">{f.contact}</Link></li>
         </ul>
         <p>© {new Date().getFullYear()} Hikayati · حكايتي. {f.rights}</p>
-      </div>
+      </div></div>
     </footer>
   );
 }

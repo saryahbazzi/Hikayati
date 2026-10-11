@@ -26,7 +26,7 @@ export default async function AdminMessaging({ params, searchParams }: { params:
     <>
       <AdminHeading title={t.messaging.title} />
       <div className="mb-6"><Notice tone="demo"><DemoTag>{t.common.demoTag}</DemoTag> {t.messaging.demoNote}</Notice></div>
-      <div className="grid gap-8">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8">
         <section aria-labelledby="records-h">
           <h2 id="records-h" className="mb-3 text-sm font-medium">{t.messaging.records}</h2>
           <FilterBar apply={t.common.apply} clear={t.common.clear} clearHref={base} label={t.messaging.records}>
