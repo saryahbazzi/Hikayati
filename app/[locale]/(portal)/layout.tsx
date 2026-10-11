@@ -29,7 +29,7 @@ export default async function PortalLayout({ children, params }: { children: Rea
     <div className="min-h-screen">
       <DemoBanner text={t.demo.banner} />
       <header className="relative border-b border-line bg-ivory/95">
-        <div className="mx-auto flex h-[4.25rem] max-w-[84rem] items-center justify-between gap-6 px-6 lg:px-10">
+        <div className="mx-auto flex h-[4.25rem] max-w-[84rem] items-center justify-between gap-2 px-4 sm:gap-6 sm:px-6 lg:px-10">
           <Link href={base} aria-label="Hikayati — حكايتي"><Wordmark /></Link>
           <PortalNav items={items} locale={locale} menuLabel={t.nav.menu} signOut={t.nav.signOut} userName={actor.fullName || actor.phone || ""} />
           <LanguageToggle locale={locale} label={t.nav.language} />
