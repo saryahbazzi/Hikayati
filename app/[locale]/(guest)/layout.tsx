@@ -13,7 +13,7 @@ export default async function GuestLayout({ children, params }: { children: Reac
   const t = common(locale);
   return (
     <div className="min-h-screen">
-      <DemoBanner text={t.demo.banner} />
+      <DemoBanner text={t.demo.banner} temporaryText={t.demo.temporary} />
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-5">
         <Link href={`/${locale}`} aria-label="Hikayati — حكايتي"><Wordmark /></Link>
         <LanguageToggle locale={locale} label={t.nav.language} />

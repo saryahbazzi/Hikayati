@@ -1,6 +1,7 @@
 import "server-only";
 import type { PGlite } from "@electric-sql/pglite";
 import { migrations } from "@/db/migrations";
+import { databaseUrl } from "./config";
 
 /**
  * One tiny interface over two Postgres drivers:
@@ -9,6 +10,8 @@ import { migrations } from "@/db/migrations";
  *                        (default ./.data/pglite). Tests use `memory://`.
  */
 export interface Queryable {
+  /** True when data will not survive a restart (set on the top-level Db handle). */
+  readonly ephemeral?: boolean;
   query<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<{ rows: T[]; rowCount: number }>;
   /** Run several statements without parameters (migrations). */
   exec(sql: string): Promise<void>;
@@ -107,7 +110,7 @@ async function migrate(db: Db) {
 export function getDb(): Promise<Db> {
   const g = globalThis as G;
   g.__hikayatiDb ??= (async () => {
-    const url = process.env.DATABASE_URL;
+    const url = databaseUrl();
     const db = url ? await openPg(url) : await openPglite();
     await migrate(db);
     const { seedReference, seedDemoIfEmpty } = await import("./seed");

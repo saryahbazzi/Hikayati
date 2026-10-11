@@ -59,6 +59,37 @@ describe("phone OTP sign-in", () => {
   });
 });
 
+describe("serverless preview (ephemeral database)", () => {
+  it("Vercel previews default to demo access; production does not", () => {
+    const e = process.env as Record<string, string | undefined>;
+    delete e.HIKAYATI_DEMO_ACCESS; e.NODE_ENV = "production";
+    expect(demoAccessEnabled()).toBe(false);
+    e.VERCEL_ENV = "production"; expect(demoAccessEnabled()).toBe(false);
+    e.VERCEL_ENV = "preview"; expect(demoAccessEnabled()).toBe(true);
+    e.HIKAYATI_DEMO_ACCESS = "false"; expect(demoAccessEnabled()).toBe(false);
+  });
+  it("uses signed stateless sessions that another instance can honour; rejects tampering and expiry", async () => {
+    process.env.VERCEL = "1";
+    const other = await freshDb();                                  // a second serverless instance with its own memory
+    const s = await demoLogin(db, DEMO_USERS.host.id);
+    expect(s.token.startsWith("v1.")).toBe(true);
+    expect((await actorFromSessionToken(db, s.token))?.role).toBe("customer");
+    expect((await actorFromSessionToken(other, s.token))?.id).toBe(DEMO_USERS.host.id);
+    expect(await actorFromSessionToken(db, s.token.slice(0, -2) + "xx")).toBeNull();
+    const [, body, sig] = s.token.split(".");
+    const forged = Buffer.from(JSON.stringify({ ...JSON.parse(Buffer.from(body, "base64url").toString()), r: "super_admin" })).toString("base64url");
+    expect(await actorFromSessionToken(db, `v1.${forged}.${sig}`)).toBeNull();   // role escalation is impossible without the secret
+    const expired = Buffer.from(JSON.stringify({ ...JSON.parse(Buffer.from(body, "base64url").toString()), e: Date.now() - 1000 })).toString("base64url");
+    expect(await actorFromSessionToken(db, `v1.${expired}.${sig}`)).toBeNull();
+  });
+  it("never accepts stateless tokens when sessions are stored (local dev, real Postgres)", async () => {
+    process.env.VERCEL = "1";
+    const s = await demoLogin(db, DEMO_USERS.host.id);
+    delete process.env.VERCEL;
+    expect(await actorFromSessionToken(db, s.token)).toBeNull();
+  });
+});
+
 describe("production safety", () => {
   it("demo access is off in production unless explicitly enabled", () => {
     const e = process.env as Record<string, string | undefined>;

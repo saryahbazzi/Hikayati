@@ -1,5 +1,7 @@
 import "server-only";
 import { demoAccessEnabled } from "./config";
+import { createHmac } from "node:crypto";
+import { appSecret } from "./config";
 import { hashToken, randomCode, randomToken, safeEqual, sha256 } from "./crypto";
 import type { Queryable } from "./db";
 import { normalizePhone } from "@/lib/phone";
@@ -67,9 +69,26 @@ export async function verifyOtp(q: Queryable, phoneInput: string, code: string, 
   return createSession(q, user.id, userAgent);
 }
 
+/**
+ * When the database is ephemeral (serverless without DATABASE_URL: each instance has its own in-memory copy), a
+ * session row would vanish as soon as another instance serves the next request. In that mode only, the session is a
+ * signed stateless token that any instance can verify and use to re-create the user. With a real database sessions are
+ * stored (hashed) and revocable, and stateless tokens are refused.
+ */
+const sign = (payload: string) => createHmac("sha256", appSecret()).update(`session:${payload}`).digest("base64url").slice(0, 32);
+/** Serverless (Vercel) + in-memory database only. Everywhere else — local dev, tests, real Postgres — sessions are stored. */
+const statelessSessions = (q: Queryable) => !!(q as { ephemeral?: boolean }).ephemeral && !!process.env.VERCEL;
+type Claims = { u: string; p: string | null; n: string; r: Role; l: "ar" | "en"; d: boolean; e: number };
+
 export async function createSession(q: Queryable, userId: string, userAgent = "") {
-  const token = randomToken(32);
   const expires = new Date(Date.now() + SESSION_TTL_MS);
+  if (statelessSessions(q)) {
+    const u = (await q.query<{ phone_e164: string | null; full_name: string; role: Role; locale: "ar" | "en"; is_demo: boolean }>("select phone_e164, full_name, role, locale, is_demo from users where id = $1", [userId])).rows[0];
+    const claims: Claims = { u: userId, p: u.phone_e164, n: u.full_name, r: u.role, l: u.locale, d: u.is_demo, e: expires.getTime() };
+    const body = Buffer.from(JSON.stringify(claims)).toString("base64url");
+    return { token: `v1.${body}.${sign(body)}`, expires, userId };
+  }
+  const token = randomToken(32);
   await q.query("insert into sessions (user_id, token_hash, expires_at, user_agent) values ($1,$2,$3,$4)", [userId, hashToken(token), expires, userAgent.slice(0, 200)]);
   return { token, expires, userId };
 }
@@ -83,8 +102,26 @@ export async function demoLogin(q: Queryable, userId: string, userAgent = "") {
   return createSession(q, u.id, userAgent);
 }
 
+async function actorFromStateless(q: Queryable, token: string): Promise<Actor | null> {
+  if (!statelessSessions(q)) return null; // never accept non-revocable tokens when sessions are stored
+  const [, body, sig] = token.split(".");
+  if (!body || !sig || !safeEqual(sig, sign(body))) return null;
+  let c: Claims;
+  try { c = JSON.parse(Buffer.from(body, "base64url").toString("utf8")) as Claims; } catch { return null; }
+  if (!c.u || c.e < Date.now()) return null;
+  const row = (await q.query<{ disabled_at: Date | null }>("select disabled_at from users where id = $1", [c.u])).rows[0];
+  if (row?.disabled_at) return null;
+  if (!row) {
+    // another instance created this user; recreate it here (the claims are server-signed)
+    await q.query("insert into users (id, phone_e164, full_name, role, locale, is_demo) values ($1,$2,$3,$4,$5,$6) on conflict do nothing", [c.u, c.p, c.n, c.r, c.l, c.d]);
+  }
+  const u = (await q.query<{ id: string; role: Role; full_name: string; phone_e164: string | null; locale: "ar" | "en" }>("select id, role, full_name, phone_e164, locale from users where id = $1", [c.u])).rows[0];
+  return u ? { id: u.id, role: u.role, fullName: u.full_name, phone: u.phone_e164, locale: u.locale } : null;
+}
+
 export async function actorFromSessionToken(q: Queryable, token: string | undefined): Promise<Actor | null> {
   if (!token) return null;
+  if (token.startsWith("v1.")) return actorFromStateless(q, token);
   const r = await q.query<{ id: string; role: Role; full_name: string; phone_e164: string | null; locale: "ar" | "en"; disabled_at: Date | null }>(
     `select u.id, u.role, u.full_name, u.phone_e164, u.locale, u.disabled_at
        from sessions s join users u on u.id = s.user_id
@@ -97,5 +134,5 @@ export async function actorFromSessionToken(q: Queryable, token: string | undefi
 }
 
 export async function destroySession(q: Queryable, token: string | undefined) {
-  if (token) await q.query("delete from sessions where token_hash = $1", [hashToken(token)]);
+  if (token && !token.startsWith("v1.")) await q.query("delete from sessions where token_hash = $1", [hashToken(token)]);
 }

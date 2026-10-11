@@ -7,6 +7,8 @@ import { authCopy } from "@/lib/i18n/auth";
 import { getActor } from "@/lib/server/session";
 
 export const dynamic = "force-dynamic";
+// A cold serverless start boots and seeds the embedded database (~6 s); give it room.
+export const maxDuration = 60;
 export const metadata: Metadata = { title: "Sign in · Hikayati", robots: { index: false } };
 
 export default async function LoginPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ next?: string }> }) {

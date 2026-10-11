@@ -23,6 +23,7 @@ export const common = makeT({
     badge: p("Demo", "تجريبي"),
     banner: p("Demo mode — fictional data. No real messages are sent and no payments are taken.", "وضع تجريبي — بيانات وهمية. لا تُرسل رسائل حقيقية ولا تُحصَّل مدفوعات."),
     simulated: p("Simulated", "محاكاة"),
+    temporary: p("Temporary storage: connect a database (DATABASE_URL) to keep your data between visits.", "تخزين مؤقت: اربط قاعدة بيانات (DATABASE_URL) للاحتفاظ ببياناتك بين الزيارات."),
   },
   status: {
     draft: p("Draft", "مسودة"), confirmed: p("Confirmed", "مؤكدة"), live: p("Live", "جارية"), completed: p("Completed", "منتهية"), cancelled: p("Cancelled", "ملغاة"),

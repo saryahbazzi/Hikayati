@@ -8,8 +8,13 @@ export const isProduction = () => process.env.NODE_ENV === "production";
 export function demoAccessEnabled(): boolean {
   if (process.env.HIKAYATI_DEMO_ACCESS === "true") return true;
   if (process.env.HIKAYATI_DEMO_ACCESS === "false") return false;
+  // Vercel *preview* deployments are for review, so they default to demo mode. Production never does.
+  if (process.env.VERCEL_ENV === "preview") return true;
   return !isProduction();
 }
+
+/** Connection string for a persistent Postgres (Vercel/Neon/Supabase integrations set one of these). */
+export const databaseUrl = () => process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING || undefined;
 
 /** Secret used to sign cookies / CSRF-style tokens. Required in production. */
 export function appSecret(): string {

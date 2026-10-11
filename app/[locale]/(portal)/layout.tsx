@@ -10,6 +10,8 @@ import { common } from "@/lib/i18n/common";
 import { requireActor } from "@/lib/server/session";
 
 export const dynamic = "force-dynamic";
+// A cold serverless start boots and seeds the embedded database (~6 s); give it room.
+export const maxDuration = 60;
 
 /** Authenticated customer area. The actor is resolved on the server; unauthenticated visitors are redirected to sign in. */
 export default async function PortalLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
@@ -28,7 +30,7 @@ export default async function PortalLayout({ children, params }: { children: Rea
   ];
   return (
     <div className="min-h-screen">
-      <DemoBanner text={t.demo.banner} />
+      <DemoBanner text={t.demo.banner} temporaryText={t.demo.temporary} />
       <header className="relative border-b border-line bg-ivory/95">
         <div className="mx-auto flex h-[4.25rem] max-w-[84rem] items-center justify-between gap-2 px-4 sm:gap-6 sm:px-6 lg:px-10">
           <Link href={base} aria-label="Hikayati — حكايتي"><Wordmark /></Link>

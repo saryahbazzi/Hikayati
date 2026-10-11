@@ -11,7 +11,7 @@ export default async function SiteLayout({ children, params }: { children: React
   const t = common(locale);
   return (
     <>
-      <DemoBanner text={t.demo.banner} />
+      <DemoBanner text={t.demo.banner} temporaryText={t.demo.temporary} />
       <Header locale={locale} t={t} />
       <main id="main">{children}</main>
       <Footer locale={locale} t={t} />

@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // PGlite ships WASM + data files that must not be bundled.
   serverExternalPackages: ["@electric-sql/pglite", "pg"],
+  // `NEXT_OUTPUT=standalone` is only used to verify, locally, that serverless tracing ships PGlite's WASM files.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   // `/` has no content of its own: English is the default language.
   async redirects() {
     return [{ source: "/", destination: "/en", permanent: false }];

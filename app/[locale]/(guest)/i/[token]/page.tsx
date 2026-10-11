@@ -11,6 +11,8 @@ import { getDb } from "@/lib/server/db";
 import { getPublicInvitation } from "@/lib/server/invitations";
 
 export const dynamic = "force-dynamic";
+// A cold serverless start boots and seeds the embedded database (~6 s); give it room.
+export const maxDuration = 60;
 export const metadata: Metadata = { title: "Invitation · حكايتي", robots: { index: false, follow: false } };
 
 /** A guest's private invitation. Authenticated only by the signed token in the URL; never shows other guests or phone numbers. */

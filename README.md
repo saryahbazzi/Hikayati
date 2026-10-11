@@ -105,9 +105,10 @@ provider confirms it, and credentials only ever come from server environment var
 
 ### Calligraphy wordmark
 
-`components/brand-mark.tsx` writes «حِكَايَتِي» (with fatha/kasra) by drawing pen strokes through SVG masks over real Amiri outlines,
-body first, then dots, then vowel marks. Regenerate with `npm run calligraphy -- /path/to/Amiri-Regular.ttf` after editing `scripts/pen.json`.
-**Replacement slot:** to use a bespoke hand-drawn wordmark, produce `lib/calligraphy.ts` in the same shape (outline `d`, `strokes`, `dots`).
+`components/brand-mark.tsx` sets «حِكَايَتِي» (fully vocalised) in classical Naskh calligraphy (Amiri, SIL OFL), shaped once with HarfBuzz and
+drawn as clean vector outlines from `lib/wordmark.ts`. It faces `HIKAYATI` across a hairline in the hero; the Latin name never moves and the
+Arabic eases in (static when reduced-motion is on). Regenerate with `npm run wordmark -- /path/to/Amiri-Regular.ttf`.
+**Replacement slot:** to use bespoke hand-lettered calligraphy, provide `lib/wordmark.ts` in the same shape (`viewBox`, `glyphs[{ d, transform }]`).
 
 ### Adding your own (Canva) invitation designs
 
@@ -124,11 +125,15 @@ Without it a quiet tonal lattice is shown. No footage is bundled or downloaded.
 
 ## Deploying to Vercel (preview first)
 
-1. Import the repo; framework **Next.js**, root `./`. Production branch stays `main`; `hikayati-v2` builds as a **Preview**.
-2. Preview env vars: `HIKAYATI_SECRET` (random), `HIKAYATI_DEMO_ACCESS=true`, and ideally `DATABASE_URL` (Supabase/Neon/any Postgres).
-   Without `DATABASE_URL`, serverless instances use an in-memory database that resets — fine to look around, not to keep data.
-3. **Production** env: `HIKAYATI_SECRET`, `DATABASE_URL`, and **do not** set `HIKAYATI_DEMO_ACCESS`.
-   Production sign-in additionally needs an OTP provider (not yet implemented in this prototype).
+1. Import the repo; framework **Next.js**, root `./`. Production branch stays `main`; **`hikayati-v2` builds as a Preview** — open the Preview URL
+   (Vercel → Deployments → the `hikayati-v2` row), not the Production domain, which still serves `main`.
+2. **Previews work with no configuration**: Vercel *preview* deployments automatically run in demo mode (seeded fictional accounts on the login page,
+   on-screen sign-in code). You can sign in and start an occasion straight away.
+3. **Keeping your data:** a serverless function has no disk, so without a database each instance keeps a temporary in-memory copy (a banner says so, and
+   sign-in stays valid across instances via a signed cookie). To keep data between visits, add a Postgres: Vercel → Storage → **Neon** (or Supabase) → connect to the
+   project. That sets `DATABASE_URL`/`POSTGRES_URL`; the schema is created automatically on first request.
+4. **Production** (never demo): set `HIKAYATI_SECRET` (random, 16+ chars) and a database. Leave `HIKAYATI_DEMO_ACCESS` unset. Real sign-in additionally needs an OTP
+   provider (not yet implemented), so production sign-in stays closed until you add one. See `.env.example`.
 
 ## Privacy (PDPL) notes
 

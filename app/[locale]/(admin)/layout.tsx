@@ -8,6 +8,8 @@ import { sectionsFor, type Section } from "@/lib/server/admin";
 import { requirePermission } from "@/lib/server/session";
 
 export const dynamic = "force-dynamic";
+// A cold serverless start boots and seeds the embedded database (~6 s); give it room.
+export const maxDuration = 60;
 
 const PATH: Record<Section, string> = {
   overview: "", events: "/events", customers: "/customers", guests: "/guests", templates: "/templates", packages: "/packages",

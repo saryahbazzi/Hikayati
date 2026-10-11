@@ -100,32 +100,12 @@ body::before {
   }
 }
 
-/* ───────── Calligraphy: pen strokes revealed through an SVG mask ─────────
-   Each stroke is a thick path in a <mask>; its dash offset runs 1.25 → 0 so the pen "travels"
-   along the path and uncovers the real letterform beneath. Dots are stamped last. */
-.hk-pen {
-  stroke-dasharray: 1 2;
-  stroke-dashoffset: 0;
-}
-.hk-dot {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@keyframes hk-draw {
-  from { stroke-dashoffset: 1.25; }
-  to { stroke-dashoffset: 0; }
-}
-@keyframes hk-dot {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
-}
+/* ───────── Hero wordmark: the rule draws, then the Arabic eases in. The Latin name never moves. ───────── */
+@keyframes mark-rule { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes mark-arabic { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: no-preference) {
-  .hk-pen {
-    animation: hk-draw var(--dur) var(--at) cubic-bezier(0.5, 0.1, 0.4, 1) both;
-  }
-  .hk-dot {
-    animation: hk-dot 0.5s var(--at) cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
-  }
+  .mark-rule { animation: mark-rule 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both; }
+  .mark-arabic { animation: mark-arabic 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.9s both; }
 }
 
 /* Embossed / tonal floral on the invitation card */
