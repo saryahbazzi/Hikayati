@@ -160,7 +160,7 @@ body::before {
   @media (min-width: 1024px) { .wrap { padding-inline: 2.5rem; } }
   .wrap-narrow { margin-inline: auto; width: 100%; max-width: 46rem; padding-inline: 1.5rem; }
 
-  .section { padding-block: clamp(5rem, 11vw, 9.5rem); }
+  .section { padding-block: clamp(4.5rem, 8.5vw, 7.5rem); }
 
   /* Quiet text link with a champagne underline that draws in */
   .link-quiet { position: relative; display: inline-block; color: var(--color-ink); }

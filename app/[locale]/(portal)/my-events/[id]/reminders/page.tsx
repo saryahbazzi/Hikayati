@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PageHeading } from "@/components/ui/misc";
 import { getWorkspace } from "@/components/portal/event-data";
 import { RemindersPanel } from "@/components/portal/reminders-panel";
 import { isLocale } from "@/lib/i18n";
@@ -27,7 +26,7 @@ export default async function EventReminders({ params }: { params: Promise<{ loc
   };
   return (
     <>
-      <PageHeading title={t.rem.title} sub={t.rem.sub} />
+      <div className="mb-8"><h2 className="font-display text-2xl">{t.rem.title}</h2><p className="mt-1 max-w-2xl text-ink-soft">{t.rem.sub}</p></div>
       <RemindersPanel
         event={{ id, title: row.title, startsAt: row.starts_at ? new Date(row.starts_at).toISOString() : null, venue: row.venue_name, timezone: row.timezone, language: row.invitation_language, status: row.status }}
         locale={locale} rules={rules} audienceCounts={counts} canManage={access.manage} />

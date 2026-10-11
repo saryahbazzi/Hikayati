@@ -14,8 +14,8 @@ export function Footer({ locale, t }: { locale: Locale; t: C }) {
   const base = `/${locale}`;
   const tag = <span className="ms-2 text-[0.68rem] uppercase tracking-[0.14em] text-taupe">({f.placeholder})</span>;
   return (
-    <footer id="contact" className="relative border-t border-line px-6 pb-10 pt-20">
-      <div className="mx-auto grid max-w-6xl gap-14 md:grid-cols-[1.3fr_1fr]">
+    <footer id="contact" className="relative border-t border-line pb-10 pt-20">
+      <div className="wrap grid gap-14 md:grid-cols-[1.3fr_1fr]">
         <div>
           <Wordmark size="lg" />
           <p className="mt-6 max-w-md leading-8 text-ink-soft">{f.line}</p>
@@ -27,8 +27,8 @@ export function Footer({ locale, t }: { locale: Locale; t: C }) {
           <Row label={f.instagram}><span dir="ltr">{f.instagramValue}</span>{tag}</Row>
         </dl>
       </div>
-      <p className="mx-auto mt-10 max-w-6xl text-xs text-taupe">{f.placeholderNote}</p>
-      <div className="mx-auto mt-8 flex max-w-6xl flex-col gap-6 border-t border-line pt-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
+      <p className="wrap mt-10 text-xs text-taupe">{f.placeholderNote}</p>
+      <div className="wrap mt-8 flex flex-col gap-6 border-t border-line pt-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
         <ul className="flex flex-wrap gap-x-8 gap-y-3">
           <li><Link href={`${base}/privacy`} className="hover:text-ink">{f.privacy}</Link></li>
           <li><Link href={`${base}/terms`} className="hover:text-ink">{f.terms}</Link></li>

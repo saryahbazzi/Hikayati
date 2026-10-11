@@ -18,7 +18,7 @@ await page.goto(url, { waitUntil: "networkidle" });
 await page.waitForTimeout(+opt("wait", 800));
 if (args.includes("--full")) {
   const h = await page.evaluate(() => document.body.scrollHeight);
-  for (let y = 0; y < h; y += 600) { await page.evaluate((y) => window.scrollTo(0, y), y); await page.waitForTimeout(150); }
+  for (let y = 0; y < h; y += 600) { await page.evaluate((y) => window.scrollTo(0, y), y); await page.waitForTimeout(350); }
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(500);
 }

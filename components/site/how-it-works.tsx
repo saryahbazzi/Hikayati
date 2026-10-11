@@ -15,7 +15,7 @@ export function HowItWorks({ t }: { t: H }) {
         <ol className="relative mt-20 grid gap-12 md:grid-cols-4 md:gap-8">
           <span aria-hidden className="absolute inset-x-0 top-[2.15rem] hidden h-px bg-line md:block" />
           {t.how.steps.map((s, i) => (
-            <Reveal as="li" key={i} delay={i * 0.12} className="relative md:[&:nth-child(even)]:mt-14">
+            <Reveal as="li" key={i} delay={i * 0.12} className="relative">
               <span className="relative inline-block bg-ivory pe-4 font-display text-5xl font-light text-champagne">{s.n}</span>
               <h3 className="display-3 mt-6">{s.title}</h3>
               <p className="mt-3 max-w-[16rem] leading-8 text-ink-soft">{s.body}</p>
