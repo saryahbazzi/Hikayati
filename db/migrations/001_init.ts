@@ -341,6 +341,17 @@ create table subscriptions (
   started_at timestamptz not null default now()
 );
 
+-- ---------- public contact form ----------
+create table contact_messages (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  reply_to   text not null,           -- email or phone typed by the visitor
+  message    text not null,
+  locale     text not null default 'en',
+  handled_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
 -- ---------- platform ----------
 create table platform_settings (
   key        text primary key,

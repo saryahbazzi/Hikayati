@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Parallel dev/build runs can use separate output dirs (NEXT_DIST_DIR=.next-xyz).
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   reactStrictMode: true,
   // PGlite ships WASM + data files that must not be bundled.
