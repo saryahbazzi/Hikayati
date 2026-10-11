@@ -171,7 +171,7 @@ export function TestFlow({ eventId, locale, eventStatus, data, defaultLang, canC
                 ))}
               </ol>
               <div aria-live="polite" className="text-sm" data-testid="test-status">
-                {g && <p>{t.test.statusNow}: <strong>{g.rsvp === "accepted" ? t.gu.reply.accepted : g.rsvp === "declined" ? t.gu.reply.declined : g.sentAt ? t.gu.reply.pending : t.gu.inv.not_sent}</strong>{g.respondedAt && <span className="text-ink-soft"> · {fmtDateTime(g.respondedAt, locale)}</span>}</p>}
+                {g && <p>{t.test.statusNow}: <strong>{g.checkedInAt ? track[track.length - 1] : g.rsvp === "accepted" ? t.gu.reply.accepted : g.rsvp === "declined" ? t.gu.reply.declined : g.sentAt ? t.gu.reply.pending : t.gu.inv.not_sent}</strong>{g.respondedAt && <span className="text-ink-soft"> · {fmtDateTime(g.respondedAt, locale)}</span>}</p>}
                 {g?.rsvp === "declined" && <p className="mt-2 text-ink-soft">{t.test.declinedNote}</p>}
               </div>
               <div className="flex flex-wrap items-center gap-4">

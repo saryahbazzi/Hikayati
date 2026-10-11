@@ -13,6 +13,7 @@ export const guestCopy = makeT({
   change: p("Change my reply", "تغيير ردّي"), changeClosed: p("The reply deadline has passed, so your answer can no longer be changed here.", "انتهت مهلة الرد، ولا يمكن تغيير إجابتك هنا."), locked: p("The host has turned off changing replies. Please contact them directly.", "أوقف المضيف تغيير الردود. يرجى التواصل معه مباشرة."),
   closed: p("The reply deadline has passed.", "انتهت مهلة الرد."), cancelled: p("This event is no longer taking place.", "لم تعد هذه المناسبة قائمة."),
   passTitle: p("Your entry pass", "رمز الدخول الخاص بك"), passNote: p("Please present this QR upon arrival. It is personal to you — don’t share it.", "يُرجى إبراز هذا الرمز عند الوصول. وهو خاص بك — لا تشاركه مع أحد."),
+  passCode: p("Entry code (if the QR can’t be scanned)", "رمز الدخول (إن تعذّر مسح الرمز)"),
   save: p("Save pass as image", "حفظ الرمز كصورة"), checkedIn: p("You’ve been checked in. Welcome!", "تم تسجيل دخولك. أهلًا بك!"), passUsed: p("Used", "مستخدم"),
   accessMessage: p("Event access", "الدخول إلى المناسبة"),
   demoTag: p("Demo invitation — fictional event", "دعوة تجريبية — مناسبة وهمية"),

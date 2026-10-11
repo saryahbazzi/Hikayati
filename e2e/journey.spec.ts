@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
+import jsQR from "jsqr";
 
 /**
  * The end-to-end journey from the product brief, against a real server and a real (in-memory) database.
@@ -7,6 +8,20 @@ import { expect, test, type Page } from "@playwright/test";
 const PHONE = "0555123456";
 const next = (page: Page) => page.getByTestId("wizard-next").click();
 const lbl = (page: Page, t: string) => page.getByLabel(new RegExp(`^${t}\\s*\\*?$`));
+/** Rasterise an on-page <svg> QR and decode it with jsQR — proves the code on screen is a real, scannable QR. */
+async function decodeQr(qr: Locator): Promise<string | null> {
+  const raw = await qr.evaluate(async (svg) => {
+    const xml = new XMLSerializer().serializeToString(svg);
+    const img = new Image();
+    await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = () => rej(new Error("img")); img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml); });
+    const c = document.createElement("canvas");
+    c.width = c.height = 600;
+    const g = c.getContext("2d")!;
+    g.fillStyle = "#fff"; g.fillRect(0, 0, 600, 600); g.drawImage(img, 0, 0, 600, 600);
+    return { data: Array.from(g.getImageData(0, 0, 600, 600).data), w: 600, h: 600 };
+  });
+  return jsQR(Uint8ClampedArray.from(raw.data), raw.w, raw.h)?.data ?? null;
+}
 const radio = (page: Page, text: string | RegExp) => page.locator("label").filter({ hasText: text }).first();
 
 test("host journey: homepage → wizard → guests → RSVP → QR → check-in → dashboard → reminder → staff review", async ({ page, browser }) => {
@@ -110,6 +125,11 @@ test("host journey: homepage → wizard → guests → RSVP → QR → check-in 
   await expect(guest.getByText(/يسعدنا تأكيد حضورك، ونتطلع إلى مشاركتك هذه المناسبة/)).toBeVisible(); // Arabic invitation → Arabic confirmation
   await expect(guest.locator("html")).toHaveAttribute("dir", "rtl");
 
+  // The QR on the guest's screen decodes to exactly the signed pass code printed under it.
+  const decoded = await decodeQr(qr);
+  expect(decoded).toMatch(/^HK1\.[0-9a-f-]{36}\.[A-Za-z0-9_-]{27}$/);
+  expect(decoded).toBe(await guest.getByTestId("pass-code").innerText());
+
   // 16–17. Host side: the RSVP shows up; simulate the check-in; status updates.
   await page.getByTestId("test-refresh").click();
   await expect(page.getByTestId("test-status")).toContainText(/accepted/i);
@@ -120,6 +140,32 @@ test("host journey: homepage → wizard → guests → RSVP → QR → check-in 
   // A second attempt cannot check in again: the guest page now says so, and RSVP changes are blocked.
   await expect(guest.getByTestId("rsvp-change")).toHaveCount(0);
   await guestCtx.close();
+
+  // Second guest: accepts, then a staff member "scans" the decoded QR in the scanner console (manual-entry path).
+  await page.goto(`/en/my-events/${eventId}/test`);
+  await page.getByTestId("test-guest").selectOption({ label: "Reem Demo" });
+  await page.getByTestId("test-get-link").click();
+  const link2 = await page.getByTestId("test-link").inputValue();
+  const g2Ctx = await browser.newContext();
+  const g2 = await g2Ctx.newPage();
+  await g2.goto(link2);
+  await g2.getByTestId("rsvp-accept").click();
+  await expect(g2.getByTestId("rsvp-accepted")).toBeVisible();
+  const scanned = await decodeQr(g2.getByRole("img", { name: /entry pass|رمز الدخول/ }));
+  await g2Ctx.close();
+  const scanCtx = await browser.newContext();
+  const scanner = await scanCtx.newPage();
+  await scanner.goto("/en/login");
+  await scanner.getByTestId("demo-superAdmin").click();
+  await expect(scanner).toHaveURL(/\/en\/admin/);
+  await scanner.goto(`/en/admin/checkin/${eventId}`);
+  await scanner.getByLabel(/Entry pass code/).fill(scanned!);
+  await scanner.getByRole("button", { name: "Check in", exact: true }).click();
+  await expect(scanner.getByRole("status").filter({ hasText: /Reem/ }).first()).toBeVisible();
+  await scanner.getByLabel(/Entry pass code/).fill(scanned!);
+  await scanner.getByRole("button", { name: "Check in", exact: true }).click();
+  await expect(scanner.getByRole("status").filter({ hasText: /already/i })).toBeVisible();   // duplicate scan refused
+  await scanCtx.close();
 
   // 18–19. Customer dashboard reflects the real numbers.
   await page.goto("/en/my-events");

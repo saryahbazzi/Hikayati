@@ -71,6 +71,7 @@ export function RsvpPanel({ token, inv: initial, locale, t }: { token: string; i
               <p className="font-display mt-4 text-xl">{inv.guest.firstName} {inv.guest.lastName}</p>
               {inv.guest.companionsAllowed > 0 && inv.rsvp.companionsAttending > 0 && <p className="text-sm text-ink-soft">+ {inv.rsvp.companionsAttending}</p>}
               <p className="mt-2 text-xs leading-5 text-ink-soft">{t.passNote}</p>
+              <p className="mt-3 break-all font-mono text-[0.65rem] leading-4 text-taupe" dir="ltr" data-testid="pass-code" aria-label={t.passCode}>{inv.pass.token}</p>
               {inv.checkedInAt ? <p className="mt-4 text-sm text-olive" data-testid="checked-in-note">{t.checkedIn}</p> : <div className="mt-5"><Button variant="secondary" size="sm" onClick={download}>{t.save}</Button></div>}
             </div>
           )}
