@@ -49,8 +49,8 @@ export function TableWrap({ children, label }: { children: ReactNode; label: str
 export function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
   return <th scope="col" className={`whitespace-nowrap border-b border-line bg-bone/50 px-4 py-2.5 text-start text-xs font-medium text-ink-soft ${className}`}>{children}</th>;
 }
-export function Td({ children, className = "", mono }: { children?: ReactNode; className?: string; mono?: boolean }) {
-  return <td className={`border-b border-line/70 px-4 py-2.5 align-middle ${mono ? "tabular-nums" : ""} ${className}`}>{children}</td>;
+export function Td({ children, className = "", mono, dir }: { children?: ReactNode; className?: string; mono?: boolean; dir?: "ltr" | "rtl" }) {
+  return <td dir={dir} className={`border-b border-line/70 px-4 py-2.5 align-middle ${mono ? "tabular-nums" : ""} ${className}`}>{children}</td>;
 }
 
 export const ctl = "block w-full min-w-0 border border-ink/25 bg-paper px-3 py-2 text-sm text-ink placeholder:text-taupe transition-colors focus:border-olive focus:outline-none disabled:opacity-60 aria-[invalid=true]:border-[#8a3b32]";

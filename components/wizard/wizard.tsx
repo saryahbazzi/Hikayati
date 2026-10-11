@@ -37,7 +37,7 @@ export function Wizard({ locale, initial, templates }: { locale: Locale; initial
   const lastJson = useRef(JSON.stringify(initial.draft));
   const lastStep = useRef(initial.eventId ? step : 0);
   const chain = useRef<Promise<unknown>>(Promise.resolve());
-  const top = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const mounted = useRef(false);
 
   const set = useCallback((patch: Partial<EventDraft>) => {
@@ -102,7 +102,7 @@ export function Wizard({ locale, initial, templates }: { locale: Locale; initial
   useEffect(() => {
     if (!mounted.current) { mounted.current = true; return; }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    top.current?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+    navRef.current?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
     document.getElementById("wz-heading")?.focus({ preventScroll: true });
   }, [step]);
 
@@ -145,7 +145,7 @@ export function Wizard({ locale, initial, templates }: { locale: Locale; initial
   const label = t.save[save === "idle" ? "idle" : save];
 
   return (
-    <div ref={top} className="scroll-mt-6">
+    <div>
       <style>{`
         @keyframes wz-in { from { opacity: 0; transform: translateX(var(--wz-dx, 0)); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .wz-step { animation: wz-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both; } }
@@ -157,7 +157,7 @@ export function Wizard({ locale, initial, templates }: { locale: Locale; initial
         <p className="lead mt-4 max-w-2xl">{t.intro}</p>
       </header>
 
-      <nav aria-label={t.progress} className="mb-12">
+      <nav ref={navRef} aria-label={t.progress} className="mb-12 scroll-mt-4">
         <div className="mb-3 flex items-center justify-between gap-4 text-sm text-ink-soft">
           <p>
             <span className="text-ink">{t.stepOf} {step} {t.of} {LAST}</span>
